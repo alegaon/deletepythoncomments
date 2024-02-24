@@ -10,20 +10,24 @@ function activate(context) {
             // Verifica si el archivo es un archivo Python
             if (document.languageId === 'python') {
                 const text = document.getText();
-                const newText = removePythonComments(text);
 
-                // Reemplaza el texto del documento con el nuevo texto sin comentarios
-                editor.edit(editBuilder => {
-                    editBuilder.replace(
-                        new vscode.Range(document.positionAt(0), document.positionAt(text.length)),
-                        newText
-                    );
-                }).then(success => {
-                    // Si la edición fue exitosa, guarda el documento
-                    if (success) {
-                        document.save();
-                    }
-                });
+                if (text.length > 0) {                    
+                    // Ejecuta el proceso que elimina los comentarios
+                    const newText = removePythonComments(text);
+    
+                    // Reemplaza el texto del documento con el nuevo texto sin comentarios
+                    editor.edit(editBuilder => {
+                        editBuilder.replace(
+                            new vscode.Range(document.positionAt(0), document.positionAt(text.length)),
+                            newText
+                        );
+                    }).then(success => {
+                        // Si la edición fue exitosa, guarda el documento
+                        if (success) {
+                            document.save();
+                        }
+                    });
+                }            
             } else {
                 vscode.window.showErrorMessage('El archivo no es un archivo Python.');
             }
